@@ -1,0 +1,61 @@
+---
+title: "Determine Optimal Cutoff"
+vignette: >
+  %\VignetteIndexEntry{Benchmarking}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+author: "`r 'Author: Matthew Hung'`"
+date: "`r paste('Last Updated:', format(Sys.Date(), '%Y/%m/%d'))`"
+output:
+  html_document:
+    code_folding: hide
+knitr:
+  opts_chunk:
+    collapse: true
+    comment: '#>'
+---
+
+This section is designed to test optimal cutoff to call "public clones". We have taken S2+ and S2- B cells from Lopez de Azziz et al. as positive and negative controls to determine the optimal cutoff in calling "public" BCR clones. To do this, we have ran `find_publicBCR` on:
+* TEST 1 : S2- B cells against CoV-AbDab reference (filtered for S2+ sequences)
+* TEST 2 : S2+ B cells against CoV-AbDab reference (filtered for S2+ sequences)
+* TEST 3 : S2- B cells against S2+ B cells as reference
+
+```{r}
+library(tidyverse)
+library(ggprism)
+library(ggridges)
+```
+
+```{r}
+s2p_neg_vs_pos <- read.csv("./benchmark/test1/publicBCR_by_heavyVJCDR3.csv") %>% 
+    filter(heavyCDR3_dist_method == "levenshtein")
+```
+
+```{r}
+cutoff <- 0.1
+
+options(repr.plot.width=5, repr.plot.height=4)
+plot1 <- s2p_neg_vs_pos %>%
+  mutate(samples = "S2-_vs_S2+") %>%
+  ggplot(aes(x = heavyCDR3_dist, y = samples, fill = samples)) +
+    ggridges::geom_density_ridges(alpha = 0.5) +
+    geom_text(
+      data = . %>%
+        mutate(type = ifelse(heavyCDR3_dist < cutoff, "Public", "Private")) %>%
+        group_by(type, samples) %>%
+        summarize(count = n()) %>%
+        group_by(samples) %>%
+        mutate(pct = count*100/sum(count)) %>%
+        mutate(label = paste0(type, " : ", round(pct, 1), " %\n (", count, "/", sum(count), ")")) %>%
+        filter(type == "Public"),
+      aes(x = 0.1, y = samples, label = label),
+      size = 4) +
+    ggprism::theme_prism(border = T) + 
+    scale_y_discrete(expand = c(0.5, 0.5)) +
+    geom_vline(xintercept = cutoff, linetype = "dashed", color = "black") +
+    labs(x = "heavy chain CDR3 distance", y = NULL, title = "Minimum levenshtein distance\nbetween S2- vs S2+ B cells")
+print(plot1)
+ggsave("./benchmark/S2+_vs_S2-.png", plot1, width = 6, height = 4)
+```
+
+

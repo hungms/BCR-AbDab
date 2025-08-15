@@ -204,3 +204,5 @@ find_min_distances <- function(output){
         warning("\nNo public BCR sequences found")
         return(data.table())}
 }
+
+

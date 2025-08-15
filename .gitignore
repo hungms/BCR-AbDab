@@ -1,4 +1,7 @@
-resources
+resource
 .DS_Store
 R_release*
 test
+dev
+benchmark
+*.pptx

@@ -10,7 +10,7 @@ install.packages("devtools")
 devtools::install_github("hungms/detectBCR", dependencies = T)
 ```
 
-## Running the pipeline
+## Overview
 The package consist 3 main functions :  
 
 `get_reference()` allows users to request a reference database of BCR contigs specific for the antigen of interest.
@@ -22,10 +22,9 @@ The package consist 3 main functions :
 `find_convergentBCR()` 
 * TBC
 
+## Running the pipeline
 ### Determining Public Clones
-In this tutorial we will demonstrate how we can determine **PUBLIC** Sar-CoV-2 specific BCR sequences from the example data in the package.
-
-Here we will load the example QUERY data included in the package, which contain single-cell BCR sequences from plasma cells after SARS-CoV-2 mRNA-1273 vaccine. 
+In this tutorial we will demonstrate how we can determine **public Sars-CoV-2 specific BCR sequences** from the example data in the package. Here we will load the example QUERY data included in the package, which contain single-cell BCR sequences from plasma cells after Sars-CoV-2 mRNA-1273 vaccine. 
 
 Each row of the data should represent a cell / unique pair of BCR sequence. The data **must** contain a column for heavy chain CDR3 AA sequence, and optionally other columns containing information about V gene, J gene, CDR3 AA sequence for heavy/light chain.
 
@@ -39,7 +38,7 @@ head(query)
 Here we will retrieve known Sar-CoV-2 specific sequences from our reference database. Users can supply their own custom database by renaming the colnames.
 ```{r}
 # get reference Sars-CoV2 BCR database
-reference <- get_reference(antigen = "Sars-CoV-2",  org = "human")
+reference <- get_reference(antigen = "Sars-CoV-2", org = "human")
 head(reference)
 ```
 
@@ -71,30 +70,31 @@ output <- find_publicBCR(
 
 Abbreviations :
   
-`heavyCDR3` = Heavy chain CDR3 amino acid sequence  
-`heavyV` = Heavy chain V gene  
-`heavyJ` = Heavy chain J gene  
-`lightCDR3` = Light chain CDR3 amino acid sequence  
-`lightV` = Light chain V gene  
-`lightJ` = Light chain J gene  
+* `heavyCDR3` = Heavy chain CDR3 amino acid sequence  
+* `heavyV` = Heavy chain V gene  
+* `heavyJ` = Heavy chain J gene  
+* `lightCDR3` = Light chain CDR3 amino acid sequence  
+* `lightV` = Light chain V gene  
+* `lightJ` = Light chain J gene  
 
 
-### Setting distance threshold to define antigen-specificity
+## Setting distance threshold to define antigen-specificity
 Running the pipeline should return a dataframe of query contigs matching with the closest antigen-specifc contigs. The dataframe should contain columns as follows :  
-`ref_*` = metadata from reference database
-`dist_method` = method used to calculate CDR3 distance, either `hamming` or `levenshtein`  
-`dist` = CDR3 distance ranging from `0` to `1`. `0` means the CDR3 is an exact match with the reference sequence
-`mean_dist` = mean CDR3 distance ranging from `0` to `1` by averaging `dist` when both `heavyCDR3` and `lightCDR3` distances are calculated.
+
+* `ref_*` = metadata from reference database  
+* `dist_method` = method used to calculate CDR3 distance, either hamming or levenshtein
+* `dist` = CDR3 distance ranging from 0 to 1. `0` means the CDR3 is an exact match with the reference sequence  
+* `mean_dist` = mean CDR3 distance ranging from 0 to 1 by averaging `dist` when both `heavyCDR3` and `lightCDR3` distances are calculated.  
 
 ```{r}
 head(output)
 ```
 
-Users can define "antigen-specificity" base on their choice of method and threshold. Typically, we have defined antigen-speficic BCRs base on levenshtein distance less than 0.2.
+Users can define "antigen-specificity" base on their choice of method and threshold. Typically, we recommend to set the minimum levenshtein distance to be **at least less than 0.1** (see [jupyter notebook regarding threshold benchmarking](vignettes/threshold_benchmarking.ipynb)). 
 ```{r}
 ag_specific_bcr <- output %>%
   filter(dist_method == "levenshtein") %>%
-  filter(dist < 0.2)
+  filter(dist < 0.1)
 
 head(ag_specific_bcr)
 dim(ag_specific_bcr)
@@ -113,21 +113,8 @@ We are working to expand our database continuously. In our current version, the 
 * `Tetanus` - TBC
 * `Measles` - TBC
 * `Mumps` - TBC
-* `Tetanus` - TBC
-* `Measles` - TBC
-* `Mumps` - TBC
 
 ```
-| VERSION | ANTIGEN    | DATABASE           | REANALYSIS |  NOTE | DOI  |
-| ------- | ---------- | ------------------ | ---------- | ---- | ---- |
-| v0.0.0  | Sars-CoV-2 | CoV-AbDab          | N          |      | 10.1093/bioinformatics/btaa739 |
-| v0.0.0  | Vaccinia   | Chappert_2022      | Y          | B5+  | 10.1016/j.immuni.2022.08.019   |
-| v0.0.1  | Sars-CoV-2 | LopezDeAssis_2023  | Y          | S2P+ | 10.1016/j.celrep.2023.112780   |
-| v0.0.1  | Sars-CoV-2 | FerreiraGomez_2024 | Y          | TBC  | 10.1038/s41467-024-48570-0     |
-| v0.0.1  | Tetanus    | FerreiraGomez_2024 | Y          | TBC  | 10.1038/s41467-024-48570-0     |    
-| v0.0.1  | Measles    |                    |            |      | 
-
-
 | VERSION | ANTIGEN    | DATABASE           | REANALYSIS |  NOTE | DOI  |
 | ------- | ---------- | ------------------ | ---------- | ---- | ---- |
 | v0.0.0  | Sars-CoV-2 | CoV-AbDab          | N          |      | 10.1093/bioinformatics/btaa739 |

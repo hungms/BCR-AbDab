@@ -1,7 +1,7 @@
 ---
-title: "Get Started"
+title: "Getting Started"
 vignette: >
-  %\VignetteIndexEntry{Build OmniPathR databases}
+  %\VignetteIndexEntry{Getting Started}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 author: "`r 'Author: Matthew Hung'`"
@@ -24,43 +24,21 @@ library(detectBCR)
 
 ## Get example data
 ```{r}
-path <- system.file("extdata", "dandelion_metadata.csv", package = "detectBCR")
-query <- read.csv(path, row.names = 1)[1:100,]
+query <- read.csv("./resource/LopezDeAssis_2023.csv", row.names = 1)
 colnames(query)
 ```
 
 ## Get reference BCR database
 ```{r}
-reference <- get_reference(antigen = "Sars-CoV-2", org = "human")
+reference <- get_reference(antigen = "SarsCoV2", org = "human", epitope = "S2", binding = TRUE) %>%
+  filter(ref_publication == "LopezDeAssis_2023")
 head(reference)
 ```
 
 
-## Detect BCRs only on heavy chain CDR3
-```{r}
-output1 <- find_publicBCR(
-  query = query,                                 # query dataframe
-  reference = reference,                         # reference dataframe
-  dist_method = c("hamming", "levenshtein"),     # CDR3 distance calculation method
-  heavyCDR3 = "junction_aa_VDJ",                 # Required; column name that stores heavyCDR3 amino acid sequence
-  heavyV = NA,                                   # Optional; column name that stores heavyCDR3
-  heavyJ = NA,                                   # Optional; column name that stores heavyCDR3
-  lightCDR3 = NA,                                # Optional; column name that stores lightCDR3 amino acid sequence
-  lightV = NA,                                   # Optional; column name that stores light chain V gene usage
-  lightJ = NA,                                   # Optional; column name that stores light chain J gene usage
-  output_dir = "test/",                          # Optional; directory to store output file
-  ncores = 10                                    # Optional; number of cores for parallel processing
-)
-```
-
-```{r}
-dim(output1)
-output1 %>% select(heavyCDR3, ref_heavyCDR3, heavyCDR3_dist) %>% arrange(heavyCDR3_dist) %>% head() %>% show()
-```
-
 ## Detect BCRs with heavy chain V, J genes and CDR3
 ```{r}
-output2 <- find_publicBCR(
+output <- find_publicBCR(
   query = query,                                 # query dataframe
   reference = reference,                         # reference dataframe
   dist_method = c("hamming", "levenshtein"),     # CDR3 distance calculation method
@@ -76,28 +54,6 @@ output2 <- find_publicBCR(
 ```
 
 ```{r}
-dim(output2)
-output2 %>% select(heavyCDR3, ref_heavyCDR3, heavyCDR3_dist) %>% arrange(heavyCDR3_dist) %>% head() %>% show()
-```
-
-## Detect BCRs with both heavy and light chain V, J genes and CDR3
-```{r}
-output3 <- find_publicBCR(
-  query = query,                                 # query dataframe
-  reference = reference,                         # reference dataframe
-  dist_method = c("hamming", "levenshtein"),     # CDR3 distance calculation method
-  heavyCDR3 = "junction_aa_VDJ",                 # Required; column name that stores heavyCDR3 amino acid sequence
-  heavyV = "v_call_VDJ_main",                    # Optional; column name that stores heavyCDR3
-  heavyJ = "j_call_VDJ_main",                    # Optional; column name that stores heavyCDR3
-  lightCDR3 = "junction_aa_VJ",                  # Optional; column name that stores lightCDR3 amino acid sequence
-  lightV = "v_call_VJ_main",                     # Optional; column name that stores light chain V gene usage
-  lightJ = "j_call_VJ_main",                     # Optional; column name that stores light chain J gene usage
-  output_dir = "test/",                          # Optional; directory to store output file
-  ncores = 10                                    # Optional; number of cores for parallel processing
-)
-```
-
-```{r}
-dim(output3)
-output3 %>% select(barcodes, heavyCDR3, ref_heavyCDR3, heavyCDR3_dist) %>% arrange(heavyCDR3_dist) %>% head() %>% show()
+dim(output)
+output %>% select(heavyCDR3, ref_heavyCDR3, heavyCDR3_dist) %>% arrange(heavyCDR3_dist) %>% head() %>% show()
 ```
