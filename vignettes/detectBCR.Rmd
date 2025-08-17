@@ -24,7 +24,7 @@ library(detectBCR)
 
 ## Get example data
 ```{r}
-query <- read.csv("./resource/LopezDeAssis_2023.csv", row.names = 1)
+query <- read.csv("./resource/LopezDeAssis_2023.csv", row.names = 1)[1:10,]
 colnames(query)
 ```
 

@@ -94,6 +94,48 @@ s2pos <- bind_rows(s2pos)
 write.csv(s2pos, "./inst/extdata/SarsCoV2_S2+.csv", row.names = FALSE)
 ```
 
+```{r}
+s2neg <- list()
+```
+
+```{r}
+lopezdeassiz_2023 <- read.csv("./resource/LopezDeAssis_2023.csv")
+lopezdeassiz_2023 %>% head() %>% show()
+```
+
+```{r}
+lopezdeassiz_2023 <- lopezdeassiz_2023 %>%
+  filter(str_detect(.[[1]], "^N")) %>%
+  mutate(
+    ref_antigen = "SarsCoV2",
+    ref_strain = "mRNA-1273",
+    ref_epitope = "S2",
+    ref_binding = FALSE,
+    ref_org = "human",
+    ref_publication = "LopezDeAssis_2023",
+    ref_name = `X`,
+    ref_heavyV = v_call_VDJ_main,
+    ref_heavyJ = j_call_VDJ_main,
+    ref_heavyCDR3 = junction_aa_VDJ,
+    ref_lightV = v_call_VJ_main,
+    ref_lightJ = j_call_VJ_main,
+    ref_lightCDR3 = junction_aa_VJ
+  ) %>%
+  dplyr::select(ref_antigen, ref_strain, ref_epitope, ref_binding, ref_org, ref_publication, ref_name, ref_heavyV, ref_heavyJ, ref_heavyCDR3, ref_lightV, ref_lightJ, ref_lightCDR3) %>%
+  distinct(ref_heavyV, ref_heavyJ, ref_heavyCDR3, ref_lightV, ref_lightJ, ref_lightCDR3, .keep_all = TRUE)
+ 
+dim(lopezdeassiz_2023)
+
+s2neg[[1]] <- lopezdeassiz_2023
+```
+
+```{r}
+s2neg <- bind_rows(s2neg)
+write.csv(s2neg, "./inst/extdata/SarsCoV2_S2-.csv", row.names = FALSE)
+```
+
+
+
 
 ## Vaccinia
 ```{r}
