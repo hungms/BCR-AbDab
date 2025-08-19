@@ -1,13 +1,12 @@
-## detectBCR
-An R package to detect and visualize public and convergent antigen-specific B-cell clones.
+## ClonoMappeR
+An R package to map BCR seuqences to detect public antigen-specific B-cell clones.
 
 `Public Clones` = Clones containing BCR sequence matching our antigen-binding BCR database  
-`Convergent Clones` = Antigen-specific clones that are present in multiple individuals  
 
 ## Installation
 ```{r}
 install.packages("devtools")
-devtools::install_github("hungms/detectBCR", dependencies = T)
+devtools::install_github("hungms/ClonoMappeR", dependencies = T)
 ```
 
 ## Overview
@@ -19,9 +18,6 @@ The package consist 3 main functions :
 * Select query BCR contigs with matching heavy/light chain VJ gene usage with reference BCR contigs.
 * Determine how similar each query CDR3 amino acid (AA) sequence is to all antigen-specific CDR3 AA sequences.
 
-`find_convergentBCR()` 
-* TBC
-
 ## Running the pipeline
 ### Determining Public Clones
 In this tutorial we will demonstrate how we can determine **public Sars-CoV-2 specific BCR sequences** from the example data in the package. Here we will load the example QUERY data included in the package, which contain single-cell BCR sequences from plasma cells after Sars-CoV-2 mRNA-1273 vaccine. 
@@ -30,7 +26,7 @@ Each row of the data should represent a cell / unique pair of BCR sequence. The 
 
 ```{r}
 # get example query data
-path <- system.file("extdata", "dandelion_metadata.csv", package = "detectBCR")
+path <- system.file("extdata", "dandelion_metadata.csv", package = "ClonoMappeR")
 query <- read.csv(path, row.names = 1)[1:10,] # reduce data for run time
 head(query)
 ```
@@ -38,7 +34,7 @@ head(query)
 Here we will retrieve known Sar-CoV-2 specific sequences from our reference database. Users can supply their own custom database by renaming the colnames.
 ```{r}
 # get reference Sars-CoV2 BCR database
-reference <- get_reference(antigen = "Sars-CoV-2", org = "human")
+reference <- get_reference(antigen = "SarsCoV2", epitope = "S2", binding = TRUE, org = "human")
 head(reference)
 ```
 
@@ -100,12 +96,6 @@ head(ag_specific_bcr)
 dim(ag_specific_bcr)
 ```
 
-
-### Finding convergent clones
-```{r}
-# TBC
-```
-
 ## Reference Database Collection
 We are working to expand our database continuously. In our current version, the collection contains public BCR sequences for following antigens : 
 * `Sars-CoV-2` 
@@ -124,19 +114,8 @@ We are working to expand our database continuously. In our current version, the 
 | v0.0.1  | Tetanus    | FerreiraGomez_2024 | Y          | TBC  | 10.1038/s41467-024-48570-0     |    
 | v0.0.1  | Measles    |                    |            |      | 
 
-
-| VERSION | ANTIGEN    | DATABASE           | REANALYSIS |  NOTE | DOI  |
-| ------- | ---------- | ------------------ | ---------- | ---- | ---- |
-| v0.0.0  | Sars-CoV-2 | CoV-AbDab          | N          |      | 10.1093/bioinformatics/btaa739 |
-| v0.0.0  | Vaccinia   | Chappert_2022      | Y          | B5+  | 10.1016/j.immuni.2022.08.019   |
-| v0.0.1  | Sars-CoV-2 | LopezDeAssis_2023  | Y          | S2P+ | 10.1016/j.celrep.2023.112780   |
-| v0.0.1  | Sars-CoV-2 | FerreiraGomez_2024 | Y          | TBC  | 10.1038/s41467-024-48570-0     |
-| v0.0.1  | Tetanus    | FerreiraGomez_2024 | Y          | TBC  | 10.1038/s41467-024-48570-0     |    
-| v0.0.1  | Measles    |                    |            |      | 
-```
-
 ## Citation
-Codes were adapted from previous publication in Cell Reports :
+Codes were inspired from previous publication in Cell Reports :
 
 ```
 @article{LOPESDEASSIS2023112780,
