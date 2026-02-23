@@ -1,4 +1,4 @@
-# detectBCR 0.0.2
+# ClonoMappeR 0.0.2
 
 - Major refactor: split matching logic into modular functions in R/find_distances.R, R/find_publicBCR.R, R/preflight_checks.R, and R/lookup_cols.R
 - All matching and preflight functions now use data.table for efficient processing

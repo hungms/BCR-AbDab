@@ -18,7 +18,7 @@ get_reference <- function(antigen, epitope, org, binding = TRUE){
 
     # get positive reference
     binding_str <- ifelse(binding, "+", "-")
-    reference <- read.csv(system.file("extdata", paste0(antigen, "_", epitope, binding_str, ".csv"), package = "detectBCR"), header = T, sep = ",") %>%
+    reference <- read.csv(system.file("extdata", paste0(antigen, "_", epitope, binding_str, ".csv"), package = "ClonoMappeR"), header = T, sep = ",") %>%
         filter(ref_org %in% org)
 
     return(reference)

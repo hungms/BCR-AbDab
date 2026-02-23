@@ -1,10 +1,10 @@
-# detectBCR Dependencies
+# ClonoMappeR Dependencies
 
-This document outlines all dependencies for the detectBCR package, their purposes, and installation instructions.
+This document outlines all dependencies for the ClonoMappeR package, their purposes, and installation instructions.
 
 ## Required Dependencies (Imports)
 
-These packages are automatically installed when you install detectBCR:
+These packages are automatically installed when you install ClonoMappeR:
 
 ### Core Data Manipulation
 - **dplyr**: Data manipulation and transformation functions
@@ -38,7 +38,7 @@ These packages provide performance enhancements and are automatically used if av
 ### Basic Installation
 ```r
 install.packages("devtools")
-devtools::install_github("hungms/detectBCR", dependencies = TRUE)
+devtools::install_github("hungms/ClonoMappeR", dependencies = TRUE)
 ```
 
 ### With Performance Enhancements
@@ -46,8 +46,8 @@ devtools::install_github("hungms/detectBCR", dependencies = TRUE)
 # Install optional performance packages
 install.packages(c("data.table", "gpuR"))
 
-# Install detectBCR
-devtools::install_github("hungms/detectBCR", dependencies = TRUE)
+# Install ClonoMappeR
+devtools::install_github("hungms/ClonoMappeR", dependencies = TRUE)
 ```
 
 ### GPU Requirements (for gpuR)
@@ -55,7 +55,7 @@ devtools::install_github("hungms/detectBCR", dependencies = TRUE)
 - **GPU**: CUDA-compatible NVIDIA GPU
 - **R**: Version 3.5.0 or higher
 
-## Dependency Usage in detectBCR
+## Dependency Usage in ClonoMappeR
 
 ### Core Functions
 - **Data filtering**: `dplyr`, `stringr`

@@ -174,8 +174,8 @@ preflight_reference <- function(reference, cols_to_match){
 preflight_checks <- function(ncores, dist_method, output_dir){
     
     # Package version message
-    pkg_version <- as.character(packageVersion("detectBCR"))
-    message(paste0("Runnning on detectBCR v", pkg_version, "..."))
+    pkg_version <- as.character(packageVersion("ClonoMappeR"))
+    message(paste0("Runnning on ClonoMappeR v", pkg_version, "..."))
 
     # check ncores is valid
     stopifnot(ncores > 0 & is.numeric(ncores))
