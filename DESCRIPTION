@@ -1,9 +1,9 @@
 Package: ClonoMappeR
-Title:  An R package to detect and visualize antigen-specific BCRs
+Title: ClonoMappeR
 Version: 0.0.2
 Authors@R: 
     person(given = "Miu Shing", family = "Hung", email = "matthewhungms@gmail.com", role = c("aut", "cre"), comment = c(ORCID = "0009-0004-0412-4374"))
-Description: An R package to detect and visualize antigen-specific BCRs
+Description: An R package to map BCR seuqences to detect public antigen-specific B-cell clones.
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)

@@ -1,5 +1,5 @@
 ## ClonoMappeR
-An R package to map BCR seuqences to public and convergent antigen-specific B-cell clones.
+An R package to map BCR seuqences to detect public antigen-specific B-cell clones.
 
 `Public Clones` = Clones containing BCR sequence matching our antigen-binding BCR database  
 
